@@ -15,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+router.get('/', (req, res) => {
+    res.json({ message: 'Hello World!' });
+})
 router.post('/check-audio', upload.single('video'), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file provided' });
