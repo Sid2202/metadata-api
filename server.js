@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const serverless = require('serverless-http');
+// const serverless = require('serverless-http');
 const multer = require('multer');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const tmp = require('tmp');
 
 const app = express();
-const router = express.Router();
-
+// const router = express.Router();
+const port = 3001;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,10 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' });
 })
-router.post('/check-audio', upload.single('video'), (req, res) => {
+app.post('/check-audio', upload.single('video'), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file provided' });
     }
@@ -50,9 +50,9 @@ router.post('/check-audio', upload.single('video'), (req, res) => {
         res.json({ hasAudio, metadata });
       });
   });
-// router.listen(() => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
-app.use('/.netlify/functions/api', router);
-module.exports.handler = serverless(app);
+// app.use('/.netlify/functions/api', router);
+// module.exports.handler = serverless(app);
